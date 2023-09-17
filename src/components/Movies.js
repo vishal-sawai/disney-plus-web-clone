@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Link } from 'react-router-dom/cjs/react-router-dom.min'
 import { selectMovies } from '../features/movie/movieSlice'
 import { useSelector} from 'react-redux/es/hooks/useSelector'
 
@@ -16,7 +17,10 @@ function Movies() {
            {movies && movies.map((movie)=>(
 
             <Wrap key={movie.id}>
-                   <img alt='' src={movie.cardImg}/>
+            <Link to={`/detail/${movie.id}`}>
+                  <img alt='' src={movie.cardImg}/>
+            </Link>
+                  
            </Wrap>
 
            ))
@@ -25,16 +29,24 @@ function Movies() {
 
       
          <Wrap>
+          <Link to={'/detail/'}>
             <img alt='' src="https://gumlet.assettype.com/afkgaming%2F2023-06%2F146cc77c-7b12-489f-8dff-5019dc80ed0e%2FPayal_Gaming_Cover_1.png?compress=true&dpr=1&w=1200"/>
+             </Link>
          </Wrap>
          <Wrap>
+          <Link to={'/detail/'}>
             <img alt='' src="https://gumlet.assettype.com/afkgaming%2F2023-06%2F146cc77c-7b12-489f-8dff-5019dc80ed0e%2FPayal_Gaming_Cover_1.png?compress=true&dpr=1&w=1200"/>
+             </Link>
          </Wrap>
          <Wrap>
+          <Link to={'/detail/'}>
             <img alt='' src="https://gumlet.assettype.com/afkgaming%2F2023-06%2F146cc77c-7b12-489f-8dff-5019dc80ed0e%2FPayal_Gaming_Cover_1.png?compress=true&dpr=1&w=1200"/>
+             </Link>
          </Wrap>
          <Wrap>
+          <Link to={'/detail/'}>
             <img alt='' src="https://gumlet.assettype.com/afkgaming%2F2023-06%2F146cc77c-7b12-489f-8dff-5019dc80ed0e%2FPayal_Gaming_Cover_1.png?compress=true&dpr=1&w=1200"/>
+             </Link>
          </Wrap>
          
        </Content>

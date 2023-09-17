@@ -1,43 +1,104 @@
-import React from 'react';
+import React,{useEffect} from 'react';
+import { auth,provider } from '../firebase';
 import styled from 'styled-components';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import {
+    selectUserName,
+    selectUserPhoto,
+    setUserLogin,
+    setSignOut
+} from "../features/user/userSlice";
+import { useSelector } from 'react-redux/es/hooks/useSelector';
+import { useDispatch } from 'react-redux';
 
 
 const Header = () => {
+    const dispatch = useDispatch();
+    const history = useHistory();
+    const userName = useSelector(selectUserName);
+    const userPhoto = useSelector(selectUserPhoto);
+
+    useEffect(()=>{
+        auth.onAuthStateChanged(async(user)=>{
+            if (user) {
+                dispatch(setUserLogin({
+                    name: user.displayName,
+                    email:user.email,
+                    photo:user.photoURL
+    
+               }))
+               history.push('/home')
+            }
+        })
+    },[])
+
+    const signIn = () =>{
+           auth.signInWithPopup(provider)
+           .then((result)=>{
+            let user = result.user
+           dispatch(setUserLogin({
+                name: user.displayName,
+                email:user.email,
+                photo:user.photoURL
+
+           }))
+           history.push('/home')
+           })
+    }
+
+    const signOut = () =>{
+        auth.signOut()
+        .then(()=>{
+            dispatch(setSignOut());
+            history.push("/login")
+        })
+    }
+
     return (
 
         <Nav>
             <Logo src="/images/logo.svg" />
-            <NavMenu>
-                <a>
-                    <img src="/images/home-icon.svg" />
+
+            {!userName ? (
+               <LoginContainer>
+               <Login onClick={signIn}>Login</Login>
+               </LoginContainer>
+            ):
+            <>
+                <NavMenu>
+               <a>
+                    <img alt='' src="/images/home-icon.svg" />
                     <span>HOME</span>
                 </a>
                 <a>
-                    <img src="/images/search-icon.svg" />
+                    <img alt='' src="/images/search-icon.svg" />
                     <span>SEARCH</span>
                 </a>
                 <a>
-                    <img src="/images/watchlist-icon.svg" />
+                    <img alt='' src="/images/watchlist-icon.svg" />
                     <span>WATCHLIST</span>
                 </a>
                 <a>
-                    <img src="/images/original-icon.svg" />
+                    <img alt='' src="/images/original-icon.svg" />
                     <span>ORIGINAL</span>
                 </a>
                 <a>
-                    <img src="/images/movie-icon.svg" />
+                    <img alt='' src="/images/movie-icon.svg" />
                     <span>MOVIES</span>
                 </a>
                 <a>
-                    <img src="/images/series-icon.svg" />
+                    <img alt='' src="/images/series-icon.svg" />
                     <span>SERIES</span>
                 </a>
             </NavMenu>
 
-            <UserImg src='https://vishal-sawai.github.io/vishalsawai/images/vishal%20sawai.png'>
-
-
+            <UserImg onClick={signOut} src='https://vishal-sawai.github.io/vishalsawai/images/vishal%20sawai.png'>
             </UserImg>
+            </>
+
+            }
+     
+                
         </Nav>
 
     )
@@ -104,4 +165,26 @@ const UserImg = styled.img`
        height: 48px;
        border-radius: 50%;
        cursor: pointer;
+`
+
+const Login = styled.div`
+     border: 1px solid #f9f9f9;
+     padding: 8px 16px;
+     border-radius: 4px;
+     letter-spacing: 1.5px;
+     text-transform: uppercase;
+     background-color: rgba(0,0,0,0.6);
+     cursor: pointer;
+     &:hover{
+        background-color: #f9f9f9;
+        color: #000;
+        border-color: transparent;
+     }
+`
+
+const LoginContainer = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex: 1;
 `
